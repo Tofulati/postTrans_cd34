@@ -9,6 +9,8 @@ Using the existing nature methods GEP dataset, we want to analyze the post-trans
 ### Repo Structure / File Descriptions:
 ```
 postTrans_cd34
+    ├───.gitignore
+    ├───README.md
     ├───postTrans_v1
     │   ├───postTrans_starCAT.rf_usage_normalized.txt (starCAT first run)
     │   ├───postTrans_common_starCAT.rf_usage_normalized.txt (starCAT second run with common genes)
