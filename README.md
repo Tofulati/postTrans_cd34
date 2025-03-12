@@ -3,8 +3,16 @@
 Using the existing nature methods GEP dataset, we want to analyze the post-transplant CD34+ dataset. The resulting dataset should show the usage scores for each of the GEPs.
 
 ### Current Issues:
-- Errors converting seurat R to python
-- Visualizing plots on R and python
+- Visualizing plots on R and python (match UMAP from sc package)
+- 40k reference not working for starCAT
+    - Negative values in cNMF data  
+- starCAT not matching all genes in reference
+    - 2k gene/GEP reference
+    - 40k gene/GEP reference
+
+### Non-impactful issues:
+- Errors converting seurat R to python (h5ad)
+- Code/Repo readability
 
 ### Repo Structure / File Descriptions:
 ```
@@ -27,10 +35,11 @@ postTrans_cd34
         ├───cNMF4.spectra.k_35.dt_0_15.consensus.txt (reference, 2k genes [txt file]) <= Used for starCAT analysis
         ├───cNMF4.spectra.k_35.dt_0_15.consensus.csv (reference, 40k genes [csv file])
         └───cNMF4.spectra.k_35.dt_0_15.consensus.txt (reference, 40k genes [txt file])
-```
+
 - postTrans_v1: First run of starCAT analysis and data visualization on the preliminary dataset
 - postTrans_v2: Second run of starCAT analysis and data visualization on the completed dataset
 - References: GEP/gene references needed for starCAT analysis
+```
 
 ### References:
 - Immunogenomics. (n.d.). Immunogenomics/starcat: Implements *cellannotator (aka *cat/starcat), annotating scrna-seq with predefined gene expression programs. GitHub. https://github.com/immunogenomics/starCAT 
