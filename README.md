@@ -12,11 +12,14 @@ postTrans_cd34
     ├───.gitignore
     ├───README.md
     ├───postTrans_v1
+    │   ├───postTrans_coordinates.csv (UMAP coordinates for python)
     │   ├───postTrans_starCAT.rf_usage_normalized.txt (starCAT first run)
     │   ├───postTrans_common_starCAT.rf_usage_normalized.txt (starCAT second run with common genes)
     │   ├───starcat_analysis.ipynb (analysis notebook, R)
     │   └───starcat_visualization.ipynb (visualization notebook, python)
     ├───postTrans_v2
+    │   ├───postTrans_coordinates.csv (UMAP coordinates for python)
+    │   ├───seu_common_starCAT.rf_usage_normalized.txt (starCAT run with common genes)
     │   ├───starcat_analysis.ipynb (analysis notebook, R)
     │   └───starcat_visualization.ipynb (visualization notebook, python)
     └───References
