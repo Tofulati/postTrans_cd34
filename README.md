@@ -50,4 +50,4 @@ postTrans_cd34
 
 Research under the [Li Lab](https://www.hlilab.org/), University of California, San Diego
 
-> Work in progress
+> Completed, bugs may appear
