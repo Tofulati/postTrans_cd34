@@ -1,0 +1,134 @@
+---
+title: "starCAT Supplemental"
+output: html_notebook
+---
+Install packages
+```{r}
+suppressPackageStartupMessages({
+    library(tidyverse)
+    library(data.table)
+    library(Matrix)
+    library(Seurat)
+    library(R.utils)
+    library(qs)
+})
+```
+
+Grab dataset
+```{r}
+seu <- qread("seu_finalized.qs")
+```
+
+Visualize dataset
+```{r}
+seu_plot <- UMAPPlot(seu) + scale_x_reverse()
+
+LabelClusters(plot = seu_plot, id = "ident")
+```
+
+See object metadata for viz
+```{r}
+colnames(seu@meta.data)
+```
+
+Visualize cellname dataset
+```{r}
+DimPlot(seu, group.by = "seurat_post_scn_lineages", label = TRUE, repel = TRUE)
+```
+
+```{r}
+dim(seu)
+```
+
+```{r}
+head(seu)
+```
+
+```{r}
+seu@meta.data %>% colnames()
+```
+
+```{r}
+spectra <- read.csv("cNMF4.spectra.k_35.dt_0_15.consensus.csv")
+
+head(spectra)
+```
+
+```{r}
+dim(spectra)
+```
+
+```{r}
+colnames(spectra)
+```
+
+```{r}
+common_genes <- intersect(rownames(seu), colnames(spectra))
+
+length(common_genes)
+```
+
+```{r}
+ seu_common <- subset(seu, features = common_genes)
+```
+
+```{r}
+dim(seu_common)
+```
+
+```{r}
+seu_common@meta.data %>% colnames
+```
+
+```{r}
+counts = seu_common[["RNA"]]$counts
+```
+
+```{r}
+counts[1:5, 1:5]
+```
+
+```{r}
+data_dir = "./"
+```
+
+```{r}
+# Output counts matrix
+writeMM(counts, paste0(data_dir, 'matrix.mtx'))
+gzip(paste0(data_dir, 'matrix.mtx'))
+
+# Output cell barcodes
+barcodes <- colnames(counts)
+write_delim(as.data.frame(barcodes), paste0(data_dir, 'barcodes.tsv'),
+           col_names = FALSE)
+gzip(paste0(data_dir, 'barcodes.tsv'))
+
+# Output feature names
+gene_names <- rownames(counts)
+features <- data.frame("gene_id" = gene_names,"gene_name" = gene_names,type = "Gene Expression")
+write_delim(as.data.frame(features),delim = "\t", paste0(data_dir, 'features.tsv'),
+          col_names = FALSE)
+gzip(paste0(data_dir, 'features.tsv'))
+```
+
+```{r}
+output_name = 'seu_new_starCAT'
+counts_fn = paste0(data_dir, 'matrix.mtx.gz')
+```
+
+```{r}
+cmd = paste0('starcat', 
+    ' --reference ', '"cNMF4.gene_spectra_score.k_35.dt_0_15_t.txt"',
+    ' --counts ', '"matrix.mtx.gz"', 
+    ' --output-dir ', '"./"', 
+    ' --name ', '"', output_name, '"' 
+)
+cmd
+```
+
+```{r}
+coords <- as.data.frame(Embeddings(seu, reduction = "umap"))
+coords$seurat_post_scn_lineages <- seu@meta.data$seurat_post_scn_lineages
+write.csv(coords, "postTrans_coordinates.csv", row.names = TRUE)
+```
+
