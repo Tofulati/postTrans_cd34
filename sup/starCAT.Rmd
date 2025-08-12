@@ -2,7 +2,9 @@
 title: "starCAT Supplemental"
 output: html_notebook
 ---
+
 Install packages
+
 ```{r}
 suppressPackageStartupMessages({
     library(tidyverse)
@@ -15,11 +17,13 @@ suppressPackageStartupMessages({
 ```
 
 Grab dataset
+
 ```{r}
 seu <- qread("seu_finalized.qs")
 ```
 
 Visualize dataset
+
 ```{r}
 seu_plot <- UMAPPlot(seu) + scale_x_reverse()
 
@@ -27,13 +31,15 @@ LabelClusters(plot = seu_plot, id = "ident")
 ```
 
 See object metadata for viz
+
 ```{r}
 colnames(seu@meta.data)
 ```
 
 Visualize cellname dataset
+
 ```{r}
-DimPlot(seu, group.by = "seurat_post_scn_lineages", label = TRUE, repel = TRUE)
+DimPlot(seu, group.by = "seurat_post_scn_lineages", label = TRUE, repel = TRUE) 
 ```
 
 ```{r}
@@ -118,7 +124,7 @@ counts_fn = paste0(data_dir, 'matrix.mtx.gz')
 
 ```{r}
 cmd = paste0('starcat', 
-    ' --reference ', '"cNMF4.gene_spectra_score.k_35.dt_0_15_t.txt"',
+    ' --reference ', '"cNMF4.spectra.k_35.dt_0_15.consensus.txt"',
     ' --counts ', '"matrix.mtx.gz"', 
     ' --output-dir ', '"./"', 
     ' --name ', '"', output_name, '"' 
@@ -132,3 +138,17 @@ coords$seurat_post_scn_lineages <- seu@meta.data$seurat_post_scn_lineages
 write.csv(coords, "postTrans_coordinates.csv", row.names = TRUE)
 ```
 
+```{r}
+umap_df <- Embeddings(seu, "umap") %>% as.data.frame()
+umap_df$cell_id <- rownames(umap_df)
+
+meta_df <- seu@meta.data
+meta_df$cell_id <- rownames(meta_df)
+
+full_df <- merge(umap_df, meta_df, by = "cell_id")
+
+# Make column names match what Python expects
+colnames(full_df)[2:3] <- c("umap_1", "umap_2")
+
+write.csv(full_df, "postTrans_coordinates.csv", row.names = FALSE)
+```
